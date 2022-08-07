@@ -1,5 +1,11 @@
 package com.codedifferently.problems;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Problem03 {
     /**
      * You will be given an integer called number and an array called possibleFamilyMembers
@@ -18,6 +24,41 @@ public class Problem03 {
      * @return
      */
     public Integer[] numberFamily(Integer number, Integer[] possibleFamilyMembers){
-        return null;
+
+        ArrayList<Integer> family = (ArrayList<Integer>) Arrays.stream(possibleFamilyMembers).collect(Collectors.toList());
+        Collections.sort(family);
+        int length = family.size();
+        List<Integer> output = new ArrayList<>(List.of(number));
+
+        int startIndex = family.indexOf(number);
+        int leftDifference;
+        int rightDifference;
+        int leftCompareIndex = startIndex;
+        int rightCompareIndex = startIndex;
+        int leftIndex = startIndex > 0 ? startIndex - 1 : 0;
+        int rightIndex = startIndex < (length - 1) ? startIndex + 1 : length - 1;
+
+        while (leftIndex >= 0 && rightIndex < length) {
+            int valueLeft = family.get(leftIndex);
+            int valueLeftCompare = family.get(leftCompareIndex);
+            int valueRight = family.get(rightIndex);
+            int valueRightCompare = family.get(rightCompareIndex);
+            leftDifference = Math.abs(valueLeft - valueLeftCompare);
+            rightDifference = Math.abs(valueRight - valueRightCompare);
+            if (leftDifference == 1) {
+                output.add(valueLeft);
+                leftCompareIndex = leftIndex;
+                leftIndex--;
+            }
+            if (rightDifference == 1) {
+                output.add(valueRight);
+                rightCompareIndex = rightIndex;
+                rightIndex++;
+            }
+        }
+
+        Integer[] outputArray = output.toArray(new Integer[0]);
+        Arrays.sort(outputArray);
+        return outputArray;
     }
 }
